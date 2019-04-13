@@ -1,2 +1,3 @@
-# OSS-SnakeGame
-세종대학교: 오픈소스SW개론 팀프로젝트(김경남, 진수빈)
+# Snake #
+A simple implementation of [Snake](https://en.wikipedia.org/wiki/Snake_%28video_game%29) written in C.
+Works on the windows console and compiles with MinGW.
