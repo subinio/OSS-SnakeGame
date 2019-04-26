@@ -1,6 +1,6 @@
 # SnakeGame
 세종대학교 2019년 1학기 오픈소스SW개론(002) 팀프로젝트: Snake Game  
-**Original Project**: abdulwahid2802/SnakeGame [[link]](https://github.com/abdulwahid2802/SnakeGame)
+**Original Project**: [abdulwahid2802/SnakeGame](https://github.com/abdulwahid2802/SnakeGame)
 
 ## Table of contents
 * Execution environment
@@ -47,7 +47,7 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 <br>
 
 ## License
-Open-source under ?? license. [[link]](https://tldrlegal.com/)
+[Open-source under ?? license](https://tldrlegal.com/)
 
 
 <br>
