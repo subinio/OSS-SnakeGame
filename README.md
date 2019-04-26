@@ -53,10 +53,10 @@ Open-source under ?? license. [link](https://tldrlegal.com/)
 <br>
 
 ## Contributer's Infomation
-**김경남**
-github: [@kimkyeongnam](https://github.com/kimkyeongnam)
+**김경남**  
+github: [@kimkyeongnam](https://github.com/kimkyeongnam)  
 email: kkyy0126@naver.com
 
-**진수빈**
-github: [@subinio](https://github.com/subinio)
+**진수빈**  
+github: [@subinio](https://github.com/subinio)  
 email: subinjin22@gmail.com
