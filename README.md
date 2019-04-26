@@ -17,6 +17,7 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 
 <br>
 ### Execution screen
+
 #### 게임 초기 화면
 (준비중)
 #### 게임 실행 화면
