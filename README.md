@@ -41,7 +41,7 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 ## How to contribute
     1. Project Fork
     2. git bash 프로그램 실행 후 저장소 clone
-    3. .git 파일 생성 확인 후 OSS-main.c 파일 수정
+    3. .git 파일 생성 확인 후 main.c 파일 수정
     4. remote 저장소로 pull request 요청
 
 <br>
