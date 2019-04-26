@@ -28,8 +28,8 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 <br>
 
 ## How to execute
-    Project Fork
-    Git Bash 프로그램 실행 후 저장소 clone
+    1. Project Fork
+    2. Git Bash 프로그램 실행 후 저장소 clone
 
 <br>
 
@@ -39,10 +39,10 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 <br>
 
 ## How to contribute
-    Project Fork
-    git bash 프로그램 실행 후 저장소 clone
-    .git 파일 생성 확인 후 OSS-main.c 파일 수정
-    remote 저장소로 pull request 요청
+    1. Project Fork
+    2. git bash 프로그램 실행 후 저장소 clone
+    3. .git 파일 생성 확인 후 OSS-main.c 파일 수정
+    4. remote 저장소로 pull request 요청
 
 <br>
 
