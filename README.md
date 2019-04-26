@@ -47,7 +47,7 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 <br>
 
 ## License
-Open-source under ?? license. [link](https://tldrlegal.com/)
+Open-source under ?? license. [[link]](https://tldrlegal.com/)
 
 
 <br>
