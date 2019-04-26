@@ -1,6 +1,6 @@
 # SnakeGame
 세종대학교 2019년 1학기 오픈소스SW개론(002) 팀프로젝트: Snake Game  
-**Original Project** [[link]](https://github.com/abdulwahid2802/SnakeGame)
+**Original Project**: abdulwahid2802/SnakeGame [[link]](https://github.com/abdulwahid2802/SnakeGame)
 
 ## Table of contents
 * Execution environment
