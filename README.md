@@ -13,32 +13,32 @@
 
 <br>
 
-### Execution environment  
+## Execution environment  
 Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)을 통해 
 
 <br>
 
-### Execution screen
+## Execution screen
 
-#### 게임 초기 화면
+### 게임 초기 화면
 (준비중)
-#### 게임 실행 화면
+### 게임 실행 화면
 (준비중)
 
 <br>
 
-### How to execute
+## How to execute
 >Project Fork
 Git Bash 프로그램 실행 후 저장소 clone
 
 <br>
 
-### How to play
+## How to play
 (준비중)
 
 <br>
 
-### How to contribute
+## How to contribute
 >Project Fork
 git bash 프로그램 실행 후 저장소 clone
 .git 파일 생성 확인 후 OSS-main.c 파일 수정
@@ -46,13 +46,13 @@ remote 저장소로 pull request 요청
 
 <br>
 
-### License
+## License
 Open-source under ?? license. [link](https://tldrlegal.com/)
 
 
 <br>
 
-### Contributer's Infomation
+## Contributer's Infomation
 **김경남**
 github: [@kimkyeongnam](https://github.com/kimkyeongnam)
 email: kkyy0126@naver.com
