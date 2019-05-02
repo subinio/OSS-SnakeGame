@@ -52,7 +52,7 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 
 <br>
 
-## Contributer's Infomation
+## Contributor's Infomation
 **김경남**  
 github: [@kimkyeongnam](https://github.com/kimkyeongnam)  
 email: kkyy0126@naver.com
