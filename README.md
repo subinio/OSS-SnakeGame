@@ -2,7 +2,7 @@
   <h1 align="center">Snake Game</h1>
   <p align="center">
     세종대학교 2019년 1학기 오픈소스SW개론(002) 팀프로젝트  
-    <br><b>Original Project</b>: [abdulwahid2802/SnakeGame](https://github.com/abdulwahid2802/SnakeGame)
+    <br><b>Original Project</b>: <a href=https://github.com/abdulwahid2802/SnakeGame title="abdulwahid2802/SnakeGame">
   </p>
 </div>
 
