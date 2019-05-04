@@ -1,16 +1,10 @@
 <div align="center">
   <h1 align="center">Snake Game</h1>
   <p align="center">
-    세종대학교 2019년 1학기 오픈소스SW개론(002) 팀프로젝트
-    <a href="https://github.com/kimkyeongnam/OSS-SnakeGame">
-          <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="Software License">
-      </a>
+    세종대학교 2019년 1학기 오픈소스SW개론(002) 팀프로젝트  
+    **Original Project**: [abdulwahid2802/SnakeGame](https://github.com/abdulwahid2802/SnakeGame)
   </p>
 </div>
-
-# SnakeGame
-
-**Original Project**: [abdulwahid2802/SnakeGame](https://github.com/abdulwahid2802/SnakeGame)
 
 ## Table of contents
 * Execution environment
