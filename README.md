@@ -17,12 +17,14 @@
 
 <br>
 
-## Execution environment  
+---
+
+## 1. Execution environment  
 Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)을 통해 개발
 
 <br>
 
-## Execution screen
+## 2. Execution screen
 
 ### 게임 초기 화면
 (준비중)
@@ -31,18 +33,18 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 
 <br>
 
-## How to execute
+## 3. How to execute
     1. Project Fork
     2. Git Bash 프로그램 실행 후 저장소 clone
 
 <br>
 
-## How to play
+## 4. How to play
 (준비중)
 
 <br>
 
-## How to contribute
+## 5. How to contribute
     1. Project Fork
     2. git bash 프로그램 실행 후 저장소 clone
     3. .git 파일 생성 확인 후 main.c 파일 수정
@@ -50,13 +52,13 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 
 <br>
 
-## License
+## 6. License
 [Open-source under MIT license](https://tldrlegal.com/license/mit-license)
 
 
 <br>
 
-## Contributor's Information
+## 7. Contributor's Information
 **김경남**  
 github: [@kimkyeongnam](https://github.com/kimkyeongnam)  
 email: kkyy0126@naver.com
