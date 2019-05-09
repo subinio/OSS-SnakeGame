@@ -14,15 +14,22 @@
 #define ENTER 13
 #define ESC 27
 
-static int Xpos;
-static int Ypos;
-static int Xfood;
-static int Yfood;
-static int direction = 80; //down
-static int hits = 0;
-static int wait = 500;
-static int lives = 3;
-static int speed = 1;
+typedef struct Snake {
+	COORD pos;
+	int wait;
+	int lives;
+}Snake;
+
+typedef struct Food {
+	COORD pos;
+}Food;
+
+Snake snake;
+Food food;
+
+static int direction;
+static int score;
+static int speed;
 
 static char HEADER[4][25] =
 { "___________ __________",
@@ -48,17 +55,27 @@ static char MAP[15][25] =
 	"|                    |" ,
 };
 
+void init() {
+	
+	snake.wait = 500;
+	snake.lives = 3;
+	direction = 80;
+	score = 0;
+	speed = 1;
+
+	return;
+}
 
 void InitMap()
 {
 
-	Xpos = (rand() % 20) + 1;
-	Ypos = (rand() % 8) + 1;
+	snake.pos.X= (rand() % 20) + 1;
+	snake.pos.Y= (rand() % 8) + 1;
 
-	Xfood = (rand() % 20) + 1;
-	Yfood = (rand() % 8) + 1;
+	food.pos.X = (rand() % 20) + 1;
+	food.pos.Y = (rand() % 8) + 1;
 
-	MAP[Yfood][Xfood] = 'o';
+	MAP[food.pos.Y][food.pos.X] = 'o';
 
 }
 int DrawMap()
@@ -66,32 +83,32 @@ int DrawMap()
 	switch (direction)
 	{
 	case UP:
-		if (Ypos <= 0)
+		if (snake.pos.Y <= 0)
 			return 0;
 		else
-			Ypos--;
+			snake.pos.Y--;
 		break;
 	case DOWN:
-		if (Ypos >= 9)
+		if (snake.pos.Y >= 9)
 			return 0;
 		else
-			Ypos++;
+			snake.pos.Y++;
 		break;
 	case LEFT:
-		if (Xpos <= 1)
+		if (snake.pos.X <= 1)
 			return 0;
 		else
-			Xpos--;
+			snake.pos.X--;
 		break;
 	case RIGHT:
-		if (Xpos >= 20)
+		if (snake.pos.X >= 20)
 			return 0;
 		else
-			Xpos++;
+			snake.pos.X++;
 		break;
 	}
 
-	MAP[Ypos][Xpos] = '*';
+	MAP[snake.pos.Y][snake.pos.X] = '*';
 
 	for (int i = 0; i < 4; i++)
 		puts(HEADER[i]);
@@ -101,16 +118,16 @@ int DrawMap()
 
 	puts(FOOTER);
 
-	printf("\n\nScore: %d", hits);
-	printf("\nLives: %d", lives);
+	printf("\n\nScore: %d", score);
+	printf("\nLives: %d", snake.lives);
 	printf("\nSpeed: %d", speed);
 
 
 
 
 
-	Sleep(wait);
-	MAP[Ypos][Xpos] = ' ';
+	Sleep(snake.wait);
+	MAP[snake.pos.Y][snake.pos.X] = ' ';
 
 }
 
@@ -125,27 +142,27 @@ void GetInput()
 
 void EatFood()
 {
-	if (Ypos == Yfood && Xpos == Xfood)
+	if (snake.pos.Y == food.pos.Y && snake.pos.X == food.pos.X)
 	{
-		hits++;
+		score++;
 
-		Xfood = (rand() % 20) + 1;
-		Yfood = (rand() % 8) + 1;
+		food.pos.X = (rand() % 20) + 1;
+		food.pos.Y = (rand() % 8) + 1;
 
-		MAP[Yfood][Xfood] = 'o';
-		if (hits == 5)
+		MAP[food.pos.Y][food.pos.X] = 'o';
+		if (score == 5)
 		{
-			wait = 200;
+			snake.wait = 200;
 			speed++;
 		}
-		else if (hits == 7)
+		else if (score == 7)
 		{
-			wait = 100;
+			snake.wait = 100;
 			speed++;
 		}
-		else if (hits == 9)
+		else if (score == 9)
 		{
-			wait = 0;
+			snake.wait = 0;
 			speed++;
 		}
 
@@ -158,10 +175,10 @@ void Die(int a)
 {
 	if (!a)
 	{
-		lives--;
+		snake.lives--;
 
-		Xpos = (rand() % 20) + 1;
-		Ypos = (rand() % 8) + 1;
+		snake.pos.X = (rand() % 20) + 1;
+		snake.pos.Y = (rand() % 8) + 1;
 	}
 }
 
@@ -169,13 +186,14 @@ void Die(int a)
 
 int main()
 {
-	
 
 	srand(time(0));
 
-	InitMap();
+	init();
 
-	while (lives)
+	InitMap();
+	direction = 80;
+	while (snake.lives)
 	{
 		Die(DrawMap());
 		GetInput();
