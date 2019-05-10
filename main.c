@@ -27,7 +27,6 @@ typedef struct Food {
 Snake snake;
 Food food;
 
-static int direction;
 static int score;
 static int speed;
 
@@ -68,7 +67,6 @@ void init() {
 
 void InitMap()
 {
-
 	snake.pos.X= (rand() % 20) + 1;
 	snake.pos.Y= (rand() % 8) + 1;
 
@@ -78,38 +76,20 @@ void InitMap()
 	MAP[food.pos.Y][food.pos.X] = 'o';
 
 }
-int DrawMap()
+
+void DrawSnake()
 {
-	switch (direction)
-	{
-	case UP:
-		if (snake.pos.Y <= 0)
-			return 0;
-		else
-			snake.pos.Y--;
-		break;
-	case DOWN:
-		if (snake.pos.Y >= 9)
-			return 0;
-		else
-			snake.pos.Y++;
-		break;
-	case LEFT:
-		if (snake.pos.X <= 1)
-			return 0;
-		else
-			snake.pos.X--;
-		break;
-	case RIGHT:
-		if (snake.pos.X >= 20)
-			return 0;
-		else
-			snake.pos.X++;
-		break;
-	}
-
 	MAP[snake.pos.Y][snake.pos.X] = '*';
+}
 
+void DelSnake()
+{
+	MAP[snake.pos.Y][snake.pos.X] = ' ';
+}
+
+void DrawMap()
+{
+	DrawSnake();
 	for (int i = 0; i < 4; i++)
 		puts(HEADER[i]);
 
@@ -122,22 +102,52 @@ int DrawMap()
 	printf("\nLives: %d", snake.lives);
 	printf("\nSpeed: %d", speed);
 
-
-
-
-
 	Sleep(snake.wait);
-	MAP[snake.pos.Y][snake.pos.X] = ' ';
+	DelSnake();
+}
 
+void MoveSnake(int direction)
+{
+	switch (direction)
+	{
+	case UP:
+		if (snake.pos.Y <= 0)
+			return;
+		else
+			snake.pos.Y--;
+		break;
+	case DOWN:
+		if (snake.pos.Y >= 9)
+			return;
+		else
+			snake.pos.Y++;
+		break;
+	case LEFT:
+		if (snake.pos.X <= 1)
+			return;
+		else
+			snake.pos.X--;
+		break;
+	case RIGHT:
+		if (snake.pos.X >= 20)
+			return;
+		else
+			snake.pos.X++;
+		break;
+	default:
+		return;
+	}
 }
 
 void GetInput()
 {
-	/**/
-	if (_kbhit())
-	{
+	int direction = 0;
+	if (_kbhit()) {
 		direction = _getch();
+		MoveSnake(direction);
 	}
+	else
+		return;
 }
 
 void EatFood()
