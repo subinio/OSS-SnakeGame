@@ -58,7 +58,6 @@ void init() {
 	
 	snake.wait = 500;
 	snake.lives = 3;
-	direction = 80;
 	score = 0;
 	speed = 1;
 
