@@ -29,6 +29,7 @@ Food food;
 
 static int score;
 static int speed;
+static int direction;
 
 static char HEADER[4][25] =
 { "___________ __________",
@@ -54,20 +55,52 @@ static char MAP[15][25] =
 	"|                    |" ,
 };
 
-void init() {
-	
+
+//함수 원형 선언
+void Init();
+void InitMap();
+void DrawSnake();
+void DelSnake();
+int DrawMap();
+void MoveSnake(int direction);
+void GetInput();
+void EatFood();
+void Die(int a);
+
+int main()
+{
+	srand(time(0));
+
+	init();
+
+	InitMap();
+	direction = 80;
+	while (snake.lives){
+		Die(DrawMap());
+		GetInput();
+		EatFood();
+		system("cls");
+	}
+	return 0;
+}
+
+
+
+void Init() {
+
 	snake.wait = 500;
 	snake.lives = 3;
 	score = 0;
 	speed = 1;
+	direction = DOWN;
 
 	return;
 }
 
 void InitMap()
 {
-	snake.pos.X= (rand() % 20) + 1;
-	snake.pos.Y= (rand() % 8) + 1;
+	snake.pos.X = (rand() % 20) + 1;
+	snake.pos.Y = (rand() % 8) + 1;
 
 	food.pos.X = (rand() % 20) + 1;
 	food.pos.Y = (rand() % 8) + 1;
@@ -86,7 +119,7 @@ void DelSnake()
 	MAP[snake.pos.Y][snake.pos.X] = ' ';
 }
 
-void DrawMap()
+int DrawMap()
 {
 	DrawSnake();
 	for (int i = 0; i < 4; i++)
@@ -189,27 +222,4 @@ void Die(int a)
 		snake.pos.X = (rand() % 20) + 1;
 		snake.pos.Y = (rand() % 8) + 1;
 	}
-}
-
-
-
-int main()
-{
-
-	srand(time(0));
-
-	init();
-
-	InitMap();
-	direction = 80;
-	while (snake.lives)
-	{
-		Die(DrawMap());
-		GetInput();
-		EatFood();
-		system("cls");
-
-	}
-
-
 }
