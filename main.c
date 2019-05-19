@@ -70,7 +70,7 @@ void Display(void);
 int MoveSnake(void);
 void GetInput(void);
 void EatFood(void);
-void Die(int a);
+void CheckSnakeDie(int moving);
 void DrawTitle(void);
 void DrawScore(void);
 void DrawMap(void);
@@ -85,7 +85,7 @@ int main(void)
 	InitMap();
 	while (snake.lives) {
 		Display();
-		Die(MoveSnake());
+		CheckSnakeDie(MoveSnake());
 		GetInput();
 		EatFood();
 		system("cls");
@@ -188,40 +188,40 @@ int MoveSnake(void)
 {
 	switch (snake.direction)
 	{
-	case UP:
-		if (IsCollisionTopBorder())
-			return 0;
-		else {
-			snake.pos.Y--;
+		case UP:
+			if (IsCollisionTopBorder())
+				return 0;
+			else {
+				snake.pos.Y--;
+				return 1;
+			}
+			break;
+		case DOWN:
+			if (IsCollisionBottomBorder())
+				return 0;
+			else {
+				snake.pos.Y++;
+				return 1;
+			}
+			break;
+		case LEFT:
+			if (IsCollisionLeftBorder())
+				return 0;
+			else {
+				snake.pos.X--;
+				return 1;
+			}
+			break;
+		case RIGHT:
+			if (IsCollisionRightBorder())
+				return 0;
+			else {
+				snake.pos.X++;
+				return 1;
+			}
+			break;
+		default:
 			return 1;
-		}
-		break;
-	case DOWN:
-		if (IsCollisionBottomBorder())
-			return 0;
-		else {
-			snake.pos.Y++;
-			return 1;
-		}
-		break;
-	case LEFT:
-		if (IsCollisionLeftBorder())
-			return 0;
-		else {
-			snake.pos.X--;
-			return 1;
-		}
-		break;
-	case RIGHT:
-		if (IsCollisionRightBorder())
-			return 0;
-		else {
-			snake.pos.X++;
-			return 1;
-		}
-		break;
-	default:
-		return 1;
 	}
 }
 
@@ -232,17 +232,25 @@ void GetInput(void)
 		MoveSnake(snake.direction);
 	}
 }
+void RelocateFood(void) {
+	food.pos.X = (rand() % BOARD_WIDTH) + 1;
+	food.pos.Y = (rand() % BOARD_HEIGHT) + 1;
 
+	MAP[food.pos.Y][food.pos.X] = 'o';
+}
+
+void RelocateSnake(void) {
+	snake.pos.X = (rand() % BOARD_WIDTH) + 1;
+	snake.pos.Y = (rand() % BOARD_HEIGHT) + 1;
+}
 void EatFood(void)
 {
 	if (snake.pos.Y == food.pos.Y && snake.pos.X == food.pos.X)
 	{
 		score++;
 
-		food.pos.X = (rand() % BOARD_WIDTH) + 1;
-		food.pos.Y = (rand() % BOARD_HEIGHT) + 1;
+		RelocateFood();
 
-		MAP[food.pos.Y][food.pos.X] = 'o';
 		if (score == 5)
 		{
 			snake.wait = 200;
@@ -264,13 +272,12 @@ void EatFood(void)
 }
 
 
-void Die(int a)
+void CheckSnakeDie(int moving)
 {
-	if (!a)
+	if (!moving)
 	{
 		snake.lives--;
 
-		snake.pos.X = (rand() % BOARD_WIDTH) + 1;
-		snake.pos.Y = (rand() % BOARD_HEIGHT) + 1;
+		RelocateSnake();
 	}
 }
