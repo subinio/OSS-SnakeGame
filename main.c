@@ -52,7 +52,7 @@ static char MAP[15][25] =
 	"|                    |" ,
 	"----------------------"
 };
-
+                 
 void init(void);
 void InitMap(void);
 void DrawSnake(void);
