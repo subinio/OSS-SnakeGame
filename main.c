@@ -18,6 +18,7 @@ typedef struct Snake {
 	COORD pos;
 	int wait;
 	int lives;
+	int direction;
 }Snake;
 
 typedef struct Food {
@@ -29,20 +30,16 @@ Food food;
 
 static int score;
 static int speed;
-static int direction;
 
-static char HEADER[4][25] =
+static char TITLE[3][25] =
 { "___________ __________",
 "|    A SNAKE GAME    |",
 "|********************|",
-"___________ __________",
 };
-static char FOOTER[25] =
-{
-	"----------------------"
-};
+
 static char MAP[15][25] =
-{
+{	
+	"___________ __________",
 	"|                    |",
 	"|                    |" ,
 	"|                    |" ,
@@ -53,30 +50,33 @@ static char MAP[15][25] =
 	"|                    |" ,
 	"|                    |" ,
 	"|                    |" ,
+	"----------------------"
 };
 
-
-//함수 원형 선언
-void Init();
-void InitMap();
-void DrawSnake();
-void DelSnake();
-int DrawMap();
-void MoveSnake(int direction);
-void GetInput();
-void EatFood();
+void init(void);
+void InitMap(void);
+void DrawSnake(void);
+void DelSnake(void);
+void Display(void);
+int MoveSnake(void);
+void GetInput(void);
+void EatFood(void);
 void Die(int a);
+void DrawTitle(void);
+void DrawScore(void);
+void DrawMap(void);
 
-int main()
+
+int main(void)
 {
 	srand(time(0));
 
 	init();
 
 	InitMap();
-	direction = 80;
 	while (snake.lives){
-		Die(DrawMap());
+		Display();
+		Die(MoveSnake());
 		GetInput();
 		EatFood();
 		system("cls");
@@ -86,18 +86,16 @@ int main()
 
 
 
-void Init() {
-
+void init(void) 
+{
 	snake.wait = 500;
+	snake.direction = DOWN;
 	snake.lives = 3;
 	score = 0;
 	speed = 1;
-	direction = DOWN;
-
-	return;
 }
 
-void InitMap()
+void InitMap(void)
 {
 	snake.pos.X = (rand() % 20) + 1;
 	snake.pos.Y = (rand() % 8) + 1;
@@ -109,80 +107,102 @@ void InitMap()
 
 }
 
-void DrawSnake()
+void DrawSnake(void)
 {
 	MAP[snake.pos.Y][snake.pos.X] = '*';
 }
 
-void DelSnake()
+void DelSnake(void)
 {
 	MAP[snake.pos.Y][snake.pos.X] = ' ';
 }
 
-int DrawMap()
+void DrawMap(void)
 {
-	DrawSnake();
-	for (int i = 0; i < 4; i++)
-		puts(HEADER[i]);
-
-	for (int i = 0; i < 10; i++)
+	int i = 0;
+	for (i = 0; i < 12; i++)
 		puts(MAP[i]);
+}
 
-	puts(FOOTER);
+void DrawTitle(void)
+{
+	int i = 0;
+	for (i = 0; i < 4; i++)
+		puts(TITLE[i]);
+}
 
+void DrawScore(void)
+{
 	printf("\n\nScore: %d", score);
 	printf("\nLives: %d", snake.lives);
 	printf("\nSpeed: %d", speed);
+}
+
+void Display(void)
+{
+	DrawSnake();
+
+	DrawTitle();
+
+	DrawMap();
+	
+	DrawScore();
 
 	Sleep(snake.wait);
+
 	DelSnake();
 }
 
-void MoveSnake(int direction)
+int MoveSnake(void)
 {
-	switch (direction)
+	switch (snake.direction)
 	{
 	case UP:
-		if (snake.pos.Y <= 0)
-			return;
-		else
+		if (snake.pos.Y < 2)
+			return 0;
+		else {
 			snake.pos.Y--;
+			return 1;
+		}
 		break;
 	case DOWN:
-		if (snake.pos.Y >= 9)
-			return;
-		else
+		if (snake.pos.Y > 9)
+			return 0;
+		else {
 			snake.pos.Y++;
+			return 1;
+		}
 		break;
 	case LEFT:
 		if (snake.pos.X <= 1)
-			return;
-		else
+			return 0;
+		else {
 			snake.pos.X--;
+			return 1;
+		}
 		break;
 	case RIGHT:
 		if (snake.pos.X >= 20)
-			return;
-		else
+			return 0;
+		else {
 			snake.pos.X++;
+			return 1;
+		}
 		break;
 	default:
-		return;
+		return 1;
 	}
 }
 
-void GetInput()
+void GetInput(void)
 {
-	int direction = 0;
 	if (_kbhit()) {
-		direction = _getch();
-		MoveSnake(direction);
+		snake.direction = _getch();
+		MoveSnake(snake.direction);
 	}
-	else
-		return;
 }
 
-void EatFood()
+void EatFood(void)
 {
 	if (snake.pos.Y == food.pos.Y && snake.pos.X == food.pos.X)
 	{
