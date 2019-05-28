@@ -4,11 +4,7 @@
 #include <conio.h>
 #include <windows.h>
 #include <time.h>
-
-/* boolean type */
-#define false 0
-#define true 1
-#define bool int
+#include <stdbool.h>
 
 /* Keyboard Input*/
 #define UP 72
@@ -19,20 +15,17 @@
 #define ESC 27
 
 /* Size of GameBoard*/
-#define BOARD_WIDTH 20
-#define BOARD_HEIGHT 8
+#define BOARD_WIDTH 45
+#define BOARD_HEIGHT 23
 
 /*Game Border*/
-#define TOP_BORDER 0
-#define BOTTOM_BORDER 9
-#define LEFT_BORDER 1
-#define RIGHT_BORDER 20
+#define TOP_BORDER 5
+#define BOTTOM_BORDER 27
+#define LEFT_BORDER 5
+#define RIGHT_BORDER 49
 
 typedef struct Snake {
 	COORD pos;
-	int wait;
-	int lives;
-	int direction;
 }Snake;
 
 typedef struct Food {
@@ -42,24 +35,43 @@ typedef struct Food {
 Snake snake;
 Food food;
 
+/*Functions Declaration*/
+static int wait;
+static int lives;
+static int direction;
 static int score;
 static int speed;
 
 
-static char MAP[15][25] =
+static char MAP[23][45] =
 {
-	"___________ __________",
-	"|                    |",
-	"|                    |" ,
-	"|                    |" ,
-	"|                    |" ,
-	"|                    |" ,
-	"|                    |" ,
-	"|                    |" ,
-	"|                    |" ,
-	"|                    |" ,
-	"|                    |" ,
-	"----------------------"
+	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0 ,0,0,0,0,0, 0,0,0,0,0, 0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 };
 
 void Init(void);
@@ -74,22 +86,30 @@ void CheckSnakeDie(int moving);
 void DrawTitle(void);
 void DrawScore(void);
 void DrawMap(void);
+void DrawFood(void);
 void SetCurrentCursorPos(int x, int y);
 void RemoveCursor(void);
 
 int main(void)
 {
+	system("title Snake Game(KSNB)");
+	system("mode con cols=112 lines=33");
+	RemoveCursor();
+
 	srand(time(0));
 
 	Init();
 
+	DrawTitle();
+	DrawMap();
 	InitMap();
-	while (snake.lives) {
+	DrawFood();
+	while (lives) {
 		Display();
 		CheckSnakeDie(MoveSnake());
 		GetInput();
 		EatFood();
-		system("cls");
+		SetCurrentCursorPos(6 * 2, 28);
 	}
 	return 0;
 }
@@ -110,83 +130,90 @@ void RemoveCursor(void)
 
 void Init(void)
 {
-	snake.wait = 500;
-	snake.direction = DOWN;
-	snake.lives = 3;
+	wait = 100;
+	direction = DOWN;
+	lives = 100;
 	score = 0;
 	speed = 1;
 }
 
 void InitMap(void)
 {
-	snake.pos.X = (rand() % BOARD_WIDTH) + 1;
-	snake.pos.Y = (rand() % BOARD_HEIGHT) + 1;
+	snake.pos.X = (rand() % BOARD_WIDTH -2) + LEFT_BORDER + 1;
+	snake.pos.Y = (rand() % BOARD_HEIGHT -2) + TOP_BORDER + 1;
 
-	food.pos.X = (rand() % BOARD_WIDTH) + 1;
-	food.pos.Y = (rand() % BOARD_HEIGHT) + 1;
-
-	MAP[food.pos.Y][food.pos.X] = 'o';
-
+	food.pos.X = (rand() % BOARD_WIDTH -2) + LEFT_BORDER + 1;
+	food.pos.Y = (rand() % BOARD_HEIGHT -2) + TOP_BORDER + 1;
 }
 
 void DrawSnake(void)
 {
-	MAP[snake.pos.Y][snake.pos.X] = '*';
+	SetCurrentCursorPos(snake.pos.X,snake.pos.Y);
+	printf("%d",snake.pos.X);
 }
 
 void DelSnake(void)
 {
-	MAP[snake.pos.Y][snake.pos.X] = ' ';
+	SetCurrentCursorPos(snake.pos.X, snake.pos.Y);
+	printf("  ");
+}
+
+void DrawFood(void)
+{
+	SetCurrentCursorPos(food.pos.X, food.pos.Y);
+	printf("б┌");
 }
 
 void DrawMap(void)
 {
-	int i = 0;
-	for (i = 0; i < 12; i++)
-		puts(MAP[i]);
+	int i = 0, j = 0;
+	
+	SetCurrentCursorPos(0, 5);
+	for (i = 0; i < BOARD_HEIGHT; i++) {
+		printf("          ");
+		for (j = 0; j < BOARD_WIDTH; j++) {
+			if (MAP[i][j] == 1)
+				printf("бс");
+			else
+				printf("  ");
+		}
+		printf("\n");
+	}
 }
 
 void DrawTitle(void)
 {
-	char TITLE[3][25] =
-	{ "___________ __________",
-		"|    A SNAKE GAME    |",
-		"|********************|",
-	};
-
-	int i = 0;
-	for (i = 0; i < 3; i++)
-		puts(TITLE[i]);
+	SetCurrentCursorPos(26, 2);
+	printf("Snake Game");
 }
 
 void DrawScore(void)
 {
-	printf("\n\nScore: %d", score);
-	printf("\nLives: %d", snake.lives);
-	printf("\nSpeed: %d", speed);
+	SetCurrentCursorPos(46, 1);
+	printf("Score: %d", score);
+	SetCurrentCursorPos(46, 2);
+	printf("Lives: %d", lives);
+	SetCurrentCursorPos(46, 3);
+	printf("Speed: %d", speed);
 }
 
 void Display(void)
 {
-	DrawSnake();
-
-	DrawTitle();
-
-	DrawMap();
-
 	DrawScore();
 
-	Sleep(snake.wait);
+	DrawSnake();
+
+	Sleep(wait);
 
 	DelSnake();
 }
 
 bool IsCollisionTopBorder(void) {
-	return (snake.pos.Y <= TOP_BORDER + 1);
+	return (snake.pos.Y <= TOP_BORDER);
 }
 
 bool IsCollisionBottomBorder(void) {
-	return (snake.pos.Y >= BOTTOM_BORDER + 1);
+	return (snake.pos.Y >= BOTTOM_BORDER);
 }
 
 bool IsCollisionLeftBorder(void) {
@@ -199,37 +226,42 @@ bool IsCollisionRightBorder(void) {
 
 int MoveSnake(void)
 {
-	switch (snake.direction)
+	switch (direction)
 	{
 	case UP:
-		if (IsCollisionTopBorder())
+		snake.pos.Y--;
+		if (IsCollisionTopBorder()) {
 			return 0;
+		}
 		else {
-			snake.pos.Y--;
 			return 1;
 		}
 		break;
 	case DOWN:
-		if (IsCollisionBottomBorder())
+		snake.pos.Y++;
+		if (IsCollisionBottomBorder()) {
 			return 0;
+		}
 		else {
-			snake.pos.Y++;
 			return 1;
 		}
 		break;
 	case LEFT:
-		if (IsCollisionLeftBorder())
+		snake.pos.X--;
+		if (IsCollisionLeftBorder()) {
+
 			return 0;
+		}
 		else {
-			snake.pos.X--;
 			return 1;
 		}
 		break;
 	case RIGHT:
-		if (IsCollisionRightBorder())
+		snake.pos.X++;
+		if (IsCollisionRightBorder()) {
 			return 0;
+		}
 		else {
-			snake.pos.X++;
 			return 1;
 		}
 		break;
@@ -241,20 +273,20 @@ int MoveSnake(void)
 void GetInput(void)
 {
 	if (_kbhit()) {
-		snake.direction = _getch();
-		MoveSnake(snake.direction);
+		direction = _getch();
+		MoveSnake(direction);
 	}
 }
 void RelocateFood(void) {
-	food.pos.X = (rand() % BOARD_WIDTH) + 1;
-	food.pos.Y = (rand() % BOARD_HEIGHT) + 1;
+	food.pos.X = (rand() % BOARD_WIDTH-2) + LEFT_BORDER + 1;
+	food.pos.Y = (rand() % BOARD_HEIGHT-2) + TOP_BORDER + 1;
 
-	MAP[food.pos.Y][food.pos.X] = 'o';
+	DrawFood();
 }
 
 void RelocateSnake(void) {
-	snake.pos.X = (rand() % BOARD_WIDTH) + 1;
-	snake.pos.Y = (rand() % BOARD_HEIGHT) + 1;
+	snake.pos.X = (rand() % BOARD_WIDTH-2) + LEFT_BORDER + 1;
+	snake.pos.Y = (rand() % BOARD_HEIGHT-2) + TOP_BORDER + 1;
 }
 void EatFood(void)
 {
@@ -266,17 +298,17 @@ void EatFood(void)
 
 		if (score == 5)
 		{
-			snake.wait = 200;
+			wait = 200;
 			speed++;
 		}
 		else if (score == 7)
 		{
-			snake.wait = 100;
+			wait = 100;
 			speed++;
 		}
 		else if (score == 9)
 		{
-			snake.wait = 0;
+			wait = 0;
 			speed++;
 		}
 
@@ -289,7 +321,7 @@ void CheckSnakeDie(int moving)
 {
 	if (!moving)
 	{
-		snake.lives--;
+		lives--;
 
 		RelocateSnake();
 	}
