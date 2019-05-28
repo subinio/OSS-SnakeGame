@@ -74,7 +74,8 @@ void CheckSnakeDie(int moving);
 void DrawTitle(void);
 void DrawScore(void);
 void DrawMap(void);
-
+void SetCurrentCursorPos(int x, int y);
+void RemoveCursor(void);
 
 int main(void)
 {
@@ -93,7 +94,19 @@ int main(void)
 	return 0;
 }
 
+void SetCurrentCursorPos(int x, int y)
+{
+	COORD position = { 2 * x, y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
+}
 
+void RemoveCursor(void)
+{
+	CONSOLE_CURSOR_INFO curInfo;
+	GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+	curInfo.bVisible = 0;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+}
 
 void Init(void)
 {
@@ -188,40 +201,40 @@ int MoveSnake(void)
 {
 	switch (snake.direction)
 	{
-		case UP:
-			if (IsCollisionTopBorder())
-				return 0;
-			else {
-				snake.pos.Y--;
-				return 1;
-			}
-			break;
-		case DOWN:
-			if (IsCollisionBottomBorder())
-				return 0;
-			else {
-				snake.pos.Y++;
-				return 1;
-			}
-			break;
-		case LEFT:
-			if (IsCollisionLeftBorder())
-				return 0;
-			else {
-				snake.pos.X--;
-				return 1;
-			}
-			break;
-		case RIGHT:
-			if (IsCollisionRightBorder())
-				return 0;
-			else {
-				snake.pos.X++;
-				return 1;
-			}
-			break;
-		default:
+	case UP:
+		if (IsCollisionTopBorder())
+			return 0;
+		else {
+			snake.pos.Y--;
 			return 1;
+		}
+		break;
+	case DOWN:
+		if (IsCollisionBottomBorder())
+			return 0;
+		else {
+			snake.pos.Y++;
+			return 1;
+		}
+		break;
+	case LEFT:
+		if (IsCollisionLeftBorder())
+			return 0;
+		else {
+			snake.pos.X--;
+			return 1;
+		}
+		break;
+	case RIGHT:
+		if (IsCollisionRightBorder())
+			return 0;
+		else {
+			snake.pos.X++;
+			return 1;
+		}
+		break;
+	default:
+		return 1;
 	}
 }
 
