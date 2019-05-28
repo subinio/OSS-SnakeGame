@@ -139,11 +139,11 @@ void Init(void)
 
 void InitMap(void)
 {
-	snake.pos.X = (rand() % BOARD_WIDTH -2) + LEFT_BORDER + 1;
-	snake.pos.Y = (rand() % BOARD_HEIGHT -2) + TOP_BORDER + 1;
+	snake.pos.X = (rand() % (BOARD_WIDTH - 2)) + LEFT_BORDER + 1;
+	snake.pos.Y = (rand() % (BOARD_HEIGHT - 2)) + TOP_BORDER + 1;
 
-	food.pos.X = (rand() % BOARD_WIDTH -2) + LEFT_BORDER + 1;
-	food.pos.Y = (rand() % BOARD_HEIGHT -2) + TOP_BORDER + 1;
+	food.pos.X = (rand() % (BOARD_WIDTH - 2)) + LEFT_BORDER + 1;
+	food.pos.Y = (rand() % (BOARD_HEIGHT - 2)) + TOP_BORDER + 1;
 }
 
 void DrawSnake(void)
@@ -278,15 +278,15 @@ void GetInput(void)
 	}
 }
 void RelocateFood(void) {
-	food.pos.X = (rand() % BOARD_WIDTH-2) + LEFT_BORDER + 1;
-	food.pos.Y = (rand() % BOARD_HEIGHT-2) + TOP_BORDER + 1;
+	food.pos.X = (rand() % (BOARD_WIDTH - 2)) + LEFT_BORDER + 1;
+	food.pos.Y = (rand() % (BOARD_HEIGHT - 2)) + TOP_BORDER + 1;
 
 	DrawFood();
 }
 
 void RelocateSnake(void) {
-	snake.pos.X = (rand() % BOARD_WIDTH-2) + LEFT_BORDER + 1;
-	snake.pos.Y = (rand() % BOARD_HEIGHT-2) + TOP_BORDER + 1;
+	snake.pos.X = (rand() % (BOARD_WIDTH - 2)) + LEFT_BORDER + 1;
+	snake.pos.Y = (rand() % (BOARD_HEIGHT - 2)) + TOP_BORDER + 1;
 }
 void EatFood(void)
 {
