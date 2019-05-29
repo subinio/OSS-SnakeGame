@@ -5,21 +5,19 @@
     <br><b>Original Project</b>: <a href=https://github.com/abdulwahid2802/SnakeGame> abdulwahid2802/SnakeGame
   </p>
 </div>
-
+<br><br>
 ## Table of contents
+* Directory/File Structure Diagram
 * Execution environment
 * Execution screen
 * How to execute
 * How to play
 * How to contribute
 * License
+* FAQ
 * Contributer's Infomation
 
-<br>
-
-<br>
-
-<br>
+<br><br><br>
 
 ## 1. Execution environment  
 Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)을 통해 개발 (C버전)
@@ -61,10 +59,9 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 <br>
 
 ## 7. Contributor's Information
-**김경남**  
-github: [@kimkyeongnam](https://github.com/kimkyeongnam)  
-email: kkyy0126@naver.com
+### Contributors
+|Name|Github|Email|
+|:--:|:--:|:--:|
+|김경남|[@kimkyeongnam](https://github.com/kimkyeongnam)|kkyy0126@naver.com|
+|진수빈|[@subinio](https://github.com/subinio)|subinjin22@gmail.com|
 
-**진수빈**  
-github: [@subinio](https://github.com/subinio)  
-email: subinjin22@gmail.com
