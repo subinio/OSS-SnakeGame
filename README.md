@@ -2,13 +2,23 @@
   <h1 align="center">Snake Game</h1>
   <p align="center">
     세종대학교 2019년 1학기 오픈소스SW개론(002) 팀프로젝트  
-    <br><b>Original Project</b>: <a href=https://github.com/abdulwahid2802/SnakeGame> abdulwahid2802/SnakeGame
+    <br><b>Original Project</b>: <a href=https://github.com/abdulwahid2802/SnakeGame> abdulwahid2802/SnakeGame </a>
+  </p>
+  <p align="center">
+    세종대학교 오픈소스SW개론 과목에서 Github를 통한 오픈소스 기여 텀 프로젝트를 수행하기 위해<br>
+    해당 Repository는 Snake Game을 주제로 만들어졌습니다.<br>
+기존 코드에서 클린코드, UI 개선, 버그 수정에 초점을 두고 프로젝트를 진행하였습니다.<br>
+자세한 사항은 <a href=https://github.com/kimkyeongnam/OSS-SnakeGame/wiki> Wiki </a>를 참고해주시길 바랍니다.<br>
   </p>
 </div>
+
+
 <br><br>
+
 
 ## Table of contents
 * Directory/File Structure Diagram
+* SW Changes
 * Execution environment
 * Execution screen
 * How to execute
@@ -20,13 +30,18 @@
 
 <br><br><br>
 
-## 1. Execution environment  
+## 1. Directory/File Structure Diagram
+<br>
+
+## 2. Directory/File Structure Diagram
+<br>
+
+## 3. Execution environment  
 Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)을 통해 개발 (C버전)
 
 <br>
 
-## 2. Execution screen
-
+## 4. Execution screen
 ### 게임 초기 화면
 (준비중)
 ### 게임 실행 화면
@@ -34,18 +49,18 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 
 <br>
 
-## 3. How to execute
+## 5. How to execute
     1. Project Fork
     2. Git Bash 프로그램 실행 후 저장소 clone
 
 <br>
 
-## 4. How to play
+## 6. How to play
 (준비중)
 
 <br>
 
-## 5. How to contribute
+## 7. How to contribute
     1. Project Fork
     2. git bash 프로그램 실행 후 저장소 clone
     3. .git 파일 생성 확인 후 main.c 파일 수정
@@ -53,14 +68,16 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 
 <br>
 
-## 6. License
+## 8. License
 [Open-source under MIT license](https://tldrlegal.com/license/mit-license)
 
 
 <br>
 
-## 7. Contributor's Information
-### Contributors
+## 9. FAQ
+운영에 관련된 FAQ는 [Issue #??]를 통해 운영되고 있습니다.
+
+## 10. Contributors
 |Name|Github|Email|
 |:--:|:--:|:--:|
 |김경남|[@kimkyeongnam](https://github.com/kimkyeongnam)|kkyy0126@naver.com|
