@@ -13,6 +13,7 @@
 #define LEFT 75
 #define ENTER 13
 #define ESC 27
+#define DIR_KEY 224
 
 /* Size of GameBoard */
 #define BOARD_WIDTH 45
@@ -82,7 +83,7 @@ void Display(void);
 int MoveSnake(void);
 void GetInput(void);
 void EatFood(void);
-void CheckSnakeDie(int moving);
+void ChkSnakeDie(int moving);
 void DrawTitle(void);
 void DrawScore(void);
 void DrawMap(void);
@@ -91,6 +92,16 @@ void SetCurrentCursorPos(int x, int y);
 void RemoveCursor(void);
 void RelocateFood(void);
 void RelocateSnake(void);
+bool IsCollisionTopBorder(void);
+bool IsCollisionBottomBorder(void);
+bool IsCollisionLeftBorder(void);
+bool IsCollisionRightBorder(void);
+void AddTail(void);
+void DelAllTail(void);
+bool IsOppositeDir(int dirToMove);
+bool IsSameDir(int dirToMove);
+void FreeAllMemories(void);
+bool IsCollisionBody(void);
 
 int main(void)
 {
@@ -112,10 +123,12 @@ int main(void)
 	while (lives)
 	{
 		Display();
-		CheckSnakeDie(MoveSnake());
+		ChkSnakeDie(MoveSnake());
 		GetInput();
 		EatFood();
 	}
+
+	FreeAllMemories();
 
 	return 0;
 }
@@ -136,8 +149,8 @@ void RemoveCursor(void)
 
 void InitInfo(void)
 {
-	wait = 150;
-	lives = 100;
+	wait = 130;
+	lives = 10;
 	score = 0;
 	speed = 1;
 }
@@ -166,6 +179,8 @@ void DrawSnake(void)
 
 		temp = temp->next;
 	}
+
+	free(temp);
 }
 
 void DelSnake(void)
@@ -179,6 +194,8 @@ void DelSnake(void)
 
 		temp = temp->next;
 	}
+
+	free(temp);
 }
 
 void DrawFood(void)
@@ -217,9 +234,15 @@ void DrawTitle(void)
 void DrawScore(void)
 {
 	SetCurrentCursorPos(46, 1);
+	printf("                ");
+	SetCurrentCursorPos(46, 1);
 	printf("Score: %d", score);
 	SetCurrentCursorPos(46, 2);
+	printf("                ");
+	SetCurrentCursorPos(46, 2);
 	printf("Lives: %d", lives);
+	SetCurrentCursorPos(46, 3);
+	printf("                ");
 	SetCurrentCursorPos(46, 3);
 	printf("Speed: %d", speed);
 }
@@ -257,6 +280,17 @@ bool IsCollisionRightBorder(void)
 	return (Head->pos.X >= RIGHT_BORDER);
 }
 
+bool IsCollisionBody(void) {
+	Snake * p = Head->next;
+	while (p != NULL) {
+		if (Head->pos.X == p->pos.X && Head->pos.Y == p->pos.Y) {
+			return true;
+		}
+		p = p->next;
+	}
+	free(p);
+}
+
 int MoveSnake(void)
 {
 	Snake * temp = Tail;
@@ -271,7 +305,7 @@ int MoveSnake(void)
 	{
 	case UP:
 		Head->pos.Y--;
-		if (IsCollisionTopBorder())
+		if (IsCollisionTopBorder() || IsCollisionBody())
 		{
 			return 0;
 		}
@@ -283,7 +317,7 @@ int MoveSnake(void)
 
 	case DOWN:
 		Head->pos.Y++;
-		if (IsCollisionBottomBorder())
+		if (IsCollisionBottomBorder() || IsCollisionBody())
 		{
 			return 0;
 		}
@@ -295,7 +329,7 @@ int MoveSnake(void)
 
 	case LEFT:
 		Head->pos.X--;
-		if (IsCollisionLeftBorder())
+		if (IsCollisionLeftBorder() || IsCollisionBody())
 		{
 			return 0;
 		}
@@ -307,7 +341,7 @@ int MoveSnake(void)
 
 	case RIGHT:
 		Head->pos.X++;
-		if (IsCollisionRightBorder())
+		if (IsCollisionRightBorder() || IsCollisionBody())
 		{
 			return 0;
 		}
@@ -321,13 +355,60 @@ int MoveSnake(void)
 		return 1;
 
 	}
+
+	free(temp);
+}
+
+bool IsOppositeDir(int dirToMove) 
+{
+	if (Head->dir == UP && dirToMove == DOWN) {
+		return true;
+	}
+	else if (Head->dir == DOWN && dirToMove == UP) {
+		return true;
+	}
+	else if (Head->dir == LEFT && dirToMove == RIGHT) {
+		return true;
+	}
+	else if (Head->dir == RIGHT && dirToMove == LEFT) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool IsSameDir(int dirToMove) 
+{
+	if (Head->dir == dirToMove) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 void GetInput(void)
 {
-	if (_kbhit()) {
-		Head->dir = _getch();
-		MoveSnake(Head->dir);
+	int getchar;
+
+	if (_kbhit() != 0)
+	{
+		if (_getch() == DIR_KEY) 
+		{
+			getchar = _getch();
+
+			if (IsOppositeDir(getchar)) {
+				return;
+			}
+			else if (IsSameDir(getchar)) {
+				return; 
+			}
+			else {
+				Head->dir = getchar;
+				MoveSnake(Head->dir);
+			}
+		}
 	}
 }
 
@@ -353,13 +434,13 @@ void AddTail(void)
 	{
 	case UP:
 		new->pos.X = Tail->pos.X;
-		new->pos.Y = Tail->pos.Y - 1;
+		new->pos.Y = Tail->pos.Y + 1;
 		new->dir = Tail->dir;
 		break;
 
 	case DOWN:
 		new->pos.X = Tail->pos.X;
-		new->pos.Y = Tail->pos.Y + 1;
+		new->pos.Y = Tail->pos.Y - 1;
 		new->dir = Tail->dir;
 		break;
 
@@ -409,19 +490,46 @@ void EatFood(void)
 			wait = 50;
 			speed++;
 		}
-
 	}
-
 }
 
+void DelAllTail(void) 
+{
+	Snake * temp = Tail;
+	while (temp != Head) 
+	{
+		Tail = Tail->pre;
+		free(temp);
+		temp = Tail;
+	}
+	Head->next = NULL;
+}
 
-void CheckSnakeDie(int moving)
+void ChkSnakeDie(int moving)
 {
 	if (!moving)
 	{
 		lives--;
-		Tail = Head;
+		
+		DelAllTail();
+
+		DrawMap();
 
 		RelocateSnake();
 	}
+}
+
+void FreeAllMemories(void)
+{
+	Snake * temp = Head;
+
+	while (temp != NULL)
+	{
+		Head = Head->next;
+		free(temp);
+		temp = Head;
+	}
+
+	free(temp);
+	free(Head);
 }
