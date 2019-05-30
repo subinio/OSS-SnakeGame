@@ -75,33 +75,36 @@ static char MAP[23][45] =
 { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 },
 };
 
+void SetCurrentCursorPos(int x, int y);
+void RemoveCursor(void);
 void InitInfo(void);
 void InitSnake(void);
 void DrawSnake(void);
 void DelSnake(void);
-void Display(void);
 int MoveSnake(void);
-void GetInput(void);
-void EatFood(void);
 void ChkSnakeDie(int moving);
+void DrawFood(void);
+void GetInput(void);
+void ControlSpeed(void);
+void EatFood(void);
+void Display(void);
 void DrawTitle(void);
 void DrawScore(void);
+void DrawSpeed(void);
+void DrawLives(void);
 void DrawMap(void);
-void DrawFood(void);
-void SetCurrentCursorPos(int x, int y);
-void RemoveCursor(void);
 void RelocateFood(void);
 void RelocateSnake(void);
 bool IsCollisionTopBorder(void);
 bool IsCollisionBottomBorder(void);
 bool IsCollisionLeftBorder(void);
 bool IsCollisionRightBorder(void);
+bool IsCollisionBody(void);
 void AddTail(void);
 void DelAllTail(void);
 bool IsOppositeDir(int dirToMove);
 bool IsSameDir(int dirToMove);
 void FreeAllMemories(void);
-bool IsCollisionBody(void);
 
 int main(void)
 {
@@ -175,7 +178,7 @@ void DrawSnake(void)
 	while (temp != NULL)
 	{
 		SetCurrentCursorPos(temp->pos.X, temp->pos.Y);
-		printf("¿");
+		printf("Oo");
 
 		temp = temp->next;
 	}
@@ -201,7 +204,7 @@ void DelSnake(void)
 void DrawFood(void)
 {
 	SetCurrentCursorPos(food.pos.X, food.pos.Y);
-	printf("¿");
+	printf("FF");
 }
 
 void DrawMap(void)
@@ -212,11 +215,11 @@ void DrawMap(void)
 
 	for (i = 0; i < BOARD_HEIGHT; i++)
 	{
-		printf("          ");
+		SetCurrentCursorPos(LEFT_BORDER, TOP_BORDER + i);
 		for (j = 0; j < BOARD_WIDTH; j++)
 		{
 			if (MAP[i][j] == 1)
-				printf("¿");
+				printf("XX");
 
 			else
 				printf("  ");
@@ -237,23 +240,33 @@ void DrawScore(void)
 	printf("                ");
 	SetCurrentCursorPos(46, 1);
 	printf("Score: %d", score);
+}
+
+void DrawLives(void) 
+{
 	SetCurrentCursorPos(46, 2);
 	printf("                ");
 	SetCurrentCursorPos(46, 2);
 	printf("Lives: %d", lives);
+}
+
+void DrawSpeed(void) 
+{
 	SetCurrentCursorPos(46, 3);
 	printf("                ");
 	SetCurrentCursorPos(46, 3);
 	printf("Speed: %d", speed);
 }
 
+
 void Display(void)
 {
 	DrawScore();
-
-	DrawSnake();
+	DrawLives();
+	DrawSpeed();
 
 	DrawFood();
+	DrawSnake();
 
 	Sleep(wait);
 
@@ -280,14 +293,17 @@ bool IsCollisionRightBorder(void)
 	return (Head->pos.X >= RIGHT_BORDER);
 }
 
-bool IsCollisionBody(void) {
+bool IsCollisionBody(void) 
+{
 	Snake * p = Head->next;
+
 	while (p != NULL) {
 		if (Head->pos.X == p->pos.X && Head->pos.Y == p->pos.Y) {
 			return true;
 		}
 		p = p->next;
 	}
+
 	free(p);
 }
 
@@ -305,48 +321,40 @@ int MoveSnake(void)
 	{
 	case UP:
 		Head->pos.Y--;
-		if (IsCollisionTopBorder() || IsCollisionBody())
-		{
+		if (IsCollisionTopBorder() || IsCollisionBody()){
 			return 0;
 		}
-		else
-		{
+		else{
 			return 1;
 		}
 		break;
 
 	case DOWN:
 		Head->pos.Y++;
-		if (IsCollisionBottomBorder() || IsCollisionBody())
-		{
+		if (IsCollisionBottomBorder() || IsCollisionBody()){
 			return 0;
 		}
-		else
-		{
+		else{
 			return 1;
 		}
 		break;
 
 	case LEFT:
 		Head->pos.X--;
-		if (IsCollisionLeftBorder() || IsCollisionBody())
-		{
+		if (IsCollisionLeftBorder() || IsCollisionBody()){
 			return 0;
 		}
-		else
-		{
+		else{
 			return 1;
 		}
 		break;
 
 	case RIGHT:
 		Head->pos.X++;
-		if (IsCollisionRightBorder() || IsCollisionBody())
-		{
+		if (IsCollisionRightBorder() || IsCollisionBody()){
 			return 0;
 		}
-		else
-		{
+		else{
 			return 1;
 		}
 		break;
@@ -475,27 +483,33 @@ void EatFood(void)
 		AddTail();
 		RelocateFood();
 
-		if (score == 5)
-		{
-			wait = 100;
-			speed++;
-		}
-		else if (score == 7)
-		{
-			wait = 80;
-			speed++;
-		}
-		else if (score == 9)
-		{
-			wait = 50;
-			speed++;
-		}
+		ControlSpeed();
+	}
+}
+
+void ControlSpeed(void) 
+{
+	if (score == 5)
+	{
+		wait = 100;
+		speed++;
+	}
+	else if (score == 7)
+	{
+		wait = 80;
+		speed++;
+	}
+	else if (score == 9)
+	{
+		wait = 50;
+		speed++;
 	}
 }
 
 void DelAllTail(void) 
 {
 	Snake * temp = Tail;
+
 	while (temp != Head) 
 	{
 		Tail = Tail->pre;
