@@ -1,3 +1,23 @@
+/**
+* Snake Game
+* =========================================================================================================================
+* This is Derivative from..
+* Author : Abduvokhid Abdukhakimov
+* Source : https://github.com/abdulwahid2802/SnakeGame
+* License : MIT license
+* Copyright (c) 2018 , All Rights Reserved.
+* =========================================================================================================================
+* Derivative Developer : kimkyeongnam(https://github.com/kimkyeongnam), subinio(https://github.com/subinio)
+* 
+* =========================================================================================================================
+* File : main.c
+* Purpose : Reduce errors, write high-readability code, and activate Snake Games with enhancements
+* How To Play : After running, you can move Snake only direction key(→,←,↑,↓)
+* Limitations : None
+* Error Handling : None(complete)
+*
+**/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,7 +35,7 @@
 #define ESC 27
 #define DIR_KEY 224
 
-/*GameMenu Options*/
+/* GameMenu Options */
 #define GAMESTART 20
 #define EXIT 22
 
@@ -40,17 +60,18 @@ typedef struct Food {
 	COORD pos;
 }Food;
 
-Snake * Head;
-Snake * Tail;
+Snake * Head;   //이중연결리스트에서 뱀의 머리를 가르키는 포인터 (언제나 Head->pre는 NULL)
+Snake * Tail;   //이중연결리스트에서 뱀의 맨 마지막 꼬리를 가르키는 포인터 (언제나 Tail->next는 NULL)
 
 Food food;
 
-/* Functions Declaration */
-static int wait;
-static int lives;
-static int score;
-static int speed;
+/* Global variables */
+static int wait;        // 뱀의 속력을 나타내지만 실제로는 뱀이 다음동작을 하기 전 기다리는 시간 (wait의 값이 감소할 수록 속력이 빨라짐)
+static int lives;       // 뱀의 목숨 수
+static int score;       // 화면에 출력되는 점수(먹이를 먹을때마다 +1씩 증가)
+static int speed;       // 화면에 출력되는 속도 (1, 2, 3 ... 으로 표현)
 
+/* Functions Declaration */
 void SetCurrentCursorPos(int x, int y);
 void RemoveCursor(void);
 void InitInfo(void);
@@ -89,20 +110,21 @@ int Choice(void);
 
 int main(void)
 {
-	system("title Snake Game(KSNB)");
-	system("mode con cols=112 lines=33");
+	system("title Snake Game(KSNB)");        //cmd 창 제목
+	system("mode con cols=112 lines=33");    //cmd 창 크기 고정
 
 	RemoveCursor();
 
 	srand((unsigned int)time(0));
 	
-	SelectMenu();
+	SelectMenu();    // 인트로 화면
 
 	return 0;
 }
 
 void ShowIntro(void) 
 {
+	/* 인트로 화면 출력 */
 	SetCurrentCursorPos(25, 5);
 	printf("SnakeGame");
 	SetCurrentCursorPos(25, 20);
@@ -111,60 +133,10 @@ void ShowIntro(void)
 	printf("Exit");
 }
 
-int Choice(void)
+void SelectMenu(void) 
 {
-	ShowIntro();
-	
-	int y = GAMESTART;
-	SetCurrentCursorPos(24, GAMESTART);
-	printf(">");
-	
-	while (1)
-	{
-		int key;
-		if (_kbhit() != 0) 
-		{
-			key = _getch();
+	/*사용자의 선택(Choice 함수)에 따라 게임을 시작하거나 종료*/
 
-			SetCurrentCursorPos(24,y);
-			printf(" ");
-			
-			switch (key) 
-			{
-			case UP:
-				y = (y - 2 < GAMESTART) ? EXIT : y - 2;
-				if (y == GAMESTART) {
-					SetCurrentCursorPos(24, GAMESTART);
-					printf(">");
-				}
-				else {
-					SetCurrentCursorPos(24, EXIT);
-					printf(">");
-				}
-				break;
-
-			case DOWN:
-				y = (y + 2 > EXIT) ? GAMESTART : y + 2;
-				if (y == GAMESTART) {
-					SetCurrentCursorPos(24, GAMESTART);
-					printf(">");
-				}
-				else {
-					SetCurrentCursorPos(24, EXIT);
-					printf(">");
-				}
-				break;
-
-			case ENTER:
-				system("cls");
-				return y;
-				break;
-			}
-		}
-	}
-}
-
-void SelectMenu(void) {
 	if (Choice() == GAMESTART)
 	{
 		GameStart();
@@ -179,23 +151,26 @@ void SelectMenu(void) {
 
 void GameStart(void) 
 {
+	/* SelectMenu함수에서 GameStart를 선택했을 경우 시작.
+	   즉, 플레이 변수초기화 및 게임의 지속적 진행 등 게임의 전체를 다룸 */
+	
 	InitInfo();
 	InitSnake();
 
 	DrawTitle();
 	DrawMap();
 
-	RelocateFood();
+	RelocateFood();   //음식의 위치 랜덤으로 생성(초기화)
 
 	while (IsAlive())
 	{
-		Display();
-		ChkSnakeDie(MoveSnake());
-		GetInput();
-		EatFood();
+		Display();                  //Map, Snake, Score, lives, Speed 등을 화면에 나타내줌.
+		ChkSnakeDie(MoveSnake());   //뱀의 움직임에 따라 뱀이 죽었는지를 확인.
+		GetInput();                 //사용자 입력
+		EatFood();                  // 뱀이 먹이를 먹었는지 확인
 	}
 
-	FreeAllMemories();
+	FreeAllMemories();              // 게임이 끝난 후 사용한 메모리 해제(이중연결리스트 동적할당)
 }
 
 void SetCurrentCursorPos(int x, int y)
@@ -222,20 +197,20 @@ void InitInfo(void)
 
 void InitSnake(void)
 {
-	Head = (Snake *)malloc(sizeof(Snake));
+	Head = (Snake *)malloc(sizeof(Snake));     //이중연결리스트로 초기화이므로 Head포인터에 바로 생성 가능
 	Head->pre = NULL;
 	Head->next = NULL;
 
-	Head->pos.X = (rand() % (BOARD_WIDTH - 2)) + LEFT_BORDER + 1;
+	Head->pos.X = (rand() % (BOARD_WIDTH - 2)) + LEFT_BORDER + 1;   // -2를 한 이유 : 양쪽의 border두개를 빼주어야 함, +1을 한 이유 역시 border에 걸리면 안되기 때문
 	Head->pos.Y = (rand() % (BOARD_HEIGHT - 2)) + TOP_BORDER + 1;
-	Head->dir = DOWN;
+	Head->dir = DOWN;                                      //뱀의 방향은 기본값이 DOWN이므로 게임 시작과 동시에 아래방향으로 이동함.
 
-	Tail = Head;
+	Tail = Head;          //아직 Tail이 없기 때문에 Tail 포인터 역시 Head 포인터와 같은 노드를 가르킴
 }
 
 void DrawSnake(void)
 {
-	Snake * temp = Head;
+	Snake * temp = Head;       // Head 부터 Tail(NULL)까지 이중연결리스트를 돌아야 하므로 temp라는 이동포인터 생성
 
 	while (temp != NULL)
 	{
@@ -245,7 +220,7 @@ void DrawSnake(void)
 		temp = temp->next;
 	}
 
-	free(temp);
+	free(temp);  //temp 포인터 사용 후 메모리 해제
 }
 
 void DelSnake(void)
@@ -350,6 +325,9 @@ void DrawSpeed(void)
 
 void Display(void)
 {
+	/* 뱀, 먹이, 점수, 목숨, 속도 값을 화면에 출력하는 함수로, 
+	   Sleep()이 존재하여 해당 Sleep으로 뱀의 속도를 조절함. */
+
 	DrawScore();
 	DrawLives();
 	DrawSpeed();
@@ -362,37 +340,37 @@ void Display(void)
 	DelSnake();
 }
 
-bool IsAlive(void) {
-	return (lives > 0);
+bool IsAlive(void) {      //뱀이 살아있는지 판별
+	return (lives > 0);   //목숨이 남아있다면 true 반환
 }
 
-bool IsCollisionTopBorder(void)
+bool IsCollisionTopBorder(void)      //뱀의 머리(Head)가 위쪽 테두리에 충돌하였는지 판별
 {
-	return (Head->pos.Y <= TOP_BORDER);
+	return (Head->pos.Y <= TOP_BORDER);      //충돌하였다면 true 반환
 }
 
-bool IsCollisionBottomBorder(void)
+bool IsCollisionBottomBorder(void)   //뱀의 머리(Head)가 아래쪽 테두리에 충돌하였는지 판별
 {
-	return (Head->pos.Y >= BOTTOM_BORDER);
+	return (Head->pos.Y >= BOTTOM_BORDER);   //충돌하였다면 true 반환
 }
 
-bool IsCollisionLeftBorder(void)
+bool IsCollisionLeftBorder(void)    //뱀의 머리(Head)가 왼쪽 테두리에 충돌하였는지 판별              
 {
-	return (Head->pos.X <= LEFT_BORDER);
+	return (Head->pos.X <= LEFT_BORDER);    //충돌하였다면 true 반환
 }
 
-bool IsCollisionRightBorder(void)
+bool IsCollisionRightBorder(void)   //뱀의 머리(Head)가 오른쪽 테두리에 충돌하였는지 판별
 {
-	return (Head->pos.X >= RIGHT_BORDER);
+	return (Head->pos.X >= RIGHT_BORDER);  // 충돌하였다면 true 반환
 }
 
-bool IsCollisionBody(void) 
+bool IsCollisionBody(void)    //뱀의 머리(Head)가 자신의 몸과 충돌하였는지를 판별
 {
 	Snake * p = Head->next;
 
 	while (p != NULL) {
 		if (Head->pos.X == p->pos.X && Head->pos.Y == p->pos.Y) {
-			return true;
+			return true;                                                   // 충돌하였다면 true 반환
 		}
 		else {
 			p = p->next;
@@ -401,28 +379,33 @@ bool IsCollisionBody(void)
 
 	free(p);
 
-	return false;
+	return false;     //충돌하지 안았다면 false 반환
 }
 
 int MoveSnake(void)
 {
+	/* 사용자로부터 받은 Head->dir의 방향에 맞게 뱀을 움직임(이동)
+	   뱀은 머리뿐만 아니라 몸통 전체가 움직여아 하기 때문에 Tail에서부터
+	   각 노드들의 pre의 정보가 노드에 새롭게 저장되어야함 (이동하기 위해 앞 노드의 정보 필요) */
+
 	Snake * temp = Tail;
-	while (temp != Head) {
+	while (temp != Head) {                 //해당 반복문은 각 노드의 pre의 정보가 전달되는 것
 		temp->pos.X = temp->pre->pos.X;
 		temp->pos.Y = temp->pre->pos.Y;
 		temp->dir = temp->pre->dir;
 
 		temp = temp->pre;
 	}
-	switch (Head->dir)
+
+	switch (Head->dir)               //Head->dir 머리의 방향에 따라 뱀의 위치를 x나 y의 값을 조정하여 이동
 	{
 	case UP:
 		Head->pos.Y--;
-		if (IsCollisionTopBorder() || IsCollisionBody()){
-			return 0;
+		if (IsCollisionTopBorder() || IsCollisionBody()){                    //위쪽방향이면 위쪽테두리 충돌검사와 몸충돌검사 실행 
+			return 0;                                                        //충돌이 발생하면 0을 반환
 		}
 		else{
-			return 1;
+			return 1;                                                        //충돌이 발생하지 않으면 1반환
 		}
 		break;
 
@@ -464,10 +447,10 @@ int MoveSnake(void)
 	free(temp);
 }
 
-bool IsOppositeDir(int dirToMove) 
+bool IsOppositeDir(int dirToMove)                   //뱀이 현재움직이고 있는 방향과 정반대 방향인지를 판별
 {
 	if (Head->dir == UP && dirToMove == DOWN) {
-		return true;
+		return true;                                 //정반대방향이면 true 반환
 	}
 	else if (Head->dir == DOWN && dirToMove == UP) {
 		return true;
@@ -479,45 +462,45 @@ bool IsOppositeDir(int dirToMove)
 		return true;
 	}
 	else {
-		return false;
+		return false;                                //정반대방향이 아니라면 false반환
 	}
 }
 
-bool IsSameDir(int dirToMove) 
+bool IsSameDir(int dirToMove)     //뱀이 현재 움직이고 있는 방향과 같은 방향인지를 판별
 {
 	if (Head->dir == dirToMove) {
-		return true;
+		return true;                    //같은 방향이면 true 반환
 	}
 	else {
 		return false;
 	}
 }
 
-void GetInput(void)
+void GetInput(void)            //사용자의 키보드 입력
 {
 	int getchar;
 
 	if (_kbhit() != 0)
 	{
-		if (_getch() == DIR_KEY) 
+		if (_getch() == DIR_KEY)            //오직 방향키만 받겠다는 의미 (DIR_KEY는 224인 값으로 방향키를 의미)
 		{
 			getchar = _getch();
 
-			if (IsOppositeDir(getchar)) {
+			if (IsOppositeDir(getchar)) {    //현재 움직이는 방향과 정반대 방향이면 해당 키입력 먹지 않고 return;
 				return;
 			}
-			else if (IsSameDir(getchar)) {
+			else if (IsSameDir(getchar)) {   //현재 움직이는 방향과 정반대 방향이면 해당 키입력 먹지 않고 return;
 				return; 
 			}
 			else {
-				Head->dir = getchar;
-				MoveSnake();
+				Head->dir = getchar; 
+				MoveSnake();                 //위의 두 경우의 수가 아니라면 뱀을 움직임
 			}
 		}
 	}
 }
 
-void RelocateFood(void)
+void RelocateFood(void)      //먹이가 먹혔을때 먹이를 랜덤위치에 재생성
 {
 	food.pos.X = (rand() % (BOARD_WIDTH - 2)) + LEFT_BORDER + 1;
 	food.pos.Y = (rand() % (BOARD_HEIGHT - 2)) + TOP_BORDER + 1;
@@ -525,7 +508,7 @@ void RelocateFood(void)
 	DrawFood();
 }
 
-void RelocateSnake(void)
+void RelocateSnake(void)    //뱀이 죽었을때 뱀을 랜덤위치에 재생성
 {
 	Head->pos.X = (rand() % (BOARD_WIDTH - 2)) + LEFT_BORDER + 1;
 	Head->pos.Y = (rand() % (BOARD_HEIGHT - 2)) + TOP_BORDER + 1;
@@ -533,9 +516,11 @@ void RelocateSnake(void)
 
 void AddTail(void)
 {
+	/* 뱀의 꼬리를 생성하는 함수로, 뱀의 꼬리는 무조건 Tail포인터의 next필드에 연결됨 */
+	
 	Snake * new = (Snake *)malloc(sizeof(Snake));
 
-	switch (Tail->dir)
+	switch (Tail->dir)          //마지막 꼬리의 위치에 따라 새로운 뱀의 꼬리가 생성되는 위치가 달라짐 (예. 아래방향으로 가고 있으면 꼬리는 y-1에 생성 되어야 함)
 	{
 	case UP:
 		new->pos.X = Tail->pos.X;
@@ -571,20 +556,20 @@ void AddTail(void)
 	Tail = new;
 }
 
-void EatFood(void)
+void EatFood(void)           
 {
-	if (Head->pos.Y == food.pos.Y && Head->pos.X == food.pos.X)
+	if (Head->pos.Y == food.pos.Y && Head->pos.X == food.pos.X)    //뱀이 먹이를 먹었는지 확인
 	{
-		score++;
+		score++;   //뱀이 먹이를 먹으면 +1점 오름
 
-		AddTail();
-		RelocateFood();
+		AddTail();  // 뱀이 먹이를 먹으면 꼬리가 1칸 증가
+		RelocateFood();  //먹이의 위치 재생성
 
-		ControlSpeed();
+		ControlSpeed();  //먹이를 먹음에 따라 속도 조절
 	}
 }
 
-void ControlSpeed(void)
+void ControlSpeed(void)  //wait의 숫자가 작을수록 뱀의 속도가 빠르다는 것을 의미함
 {
 	if (score == 5)
 	{
@@ -612,6 +597,9 @@ void ControlSpeed(void)
 
 void DelAllTail(void) 
 {
+	/*뱀이 죽었을 경우, 모든 꼬리들이 없어지기 때문에 각 꼬리노드들의 연결을 해제해 주고 
+	  메모리를 위해 각 노드 역시 free시켜 준다. 단, Head는 남겨야 함 */
+
 	Snake * temp = Tail;
 
 	while (temp != Head) 
@@ -623,7 +611,7 @@ void DelAllTail(void)
 	Head->next = NULL;
 }
 
-void ChkSnakeDie(int moving)
+void ChkSnakeDie(int moving)  //뱀이 죽었는지를 판별
 {
 	if (!moving)
 	{
@@ -637,7 +625,7 @@ void ChkSnakeDie(int moving)
 	}
 }
 
-void FreeAllMemories(void)
+void FreeAllMemories(void)   //게임이 종료되고 더이상 사용하지 않는 메모리(이중연결리스트 노드들) 해제
 {
 	Snake * temp = Head;
 
@@ -650,4 +638,57 @@ void FreeAllMemories(void)
 
 	free(temp);
 	free(Head);
+}
+
+int Choice(void)     //사용자의 인트로 메뉴 선택
+{
+	ShowIntro();
+
+	int y = GAMESTART;
+	SetCurrentCursorPos(24, GAMESTART);
+	printf(">");
+
+	while (1)
+	{
+		int key;
+		if (_kbhit() != 0)
+		{
+			key = _getch();
+
+			SetCurrentCursorPos(24, y);
+			printf(" ");
+
+			switch (key)
+			{
+			case UP:
+				y = (y - 2 < GAMESTART) ? EXIT : y - 2;
+				if (y == GAMESTART) {
+					SetCurrentCursorPos(24, GAMESTART);
+					printf(">");
+				}
+				else {
+					SetCurrentCursorPos(24, EXIT);
+					printf(">");
+				}
+				break;
+
+			case DOWN:
+				y = (y + 2 > EXIT) ? GAMESTART : y + 2;
+				if (y == GAMESTART) {
+					SetCurrentCursorPos(24, GAMESTART);
+					printf(">");
+				}
+				else {
+					SetCurrentCursorPos(24, EXIT);
+					printf(">");
+				}
+				break;
+
+			case ENTER:
+				system("cls");
+				return y;
+				break;
+			}
+		}
+	}
 }
