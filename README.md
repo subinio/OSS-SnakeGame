@@ -91,6 +91,8 @@ Windows 10에서 C언어 기반의 콘솔응용프로그램(Visual Studio 2017)�
 ## 9. FAQ
 FAQ는 [Issue #38](https://github.com/kimkyeongnam/OSS-SnakeGame/issues/38)을 통해 운영되고 있습니다.
 
+<br>
+
 ## 10. Contributors
 |Name|Github|Email|
 |:--:|:--:|:--:|
